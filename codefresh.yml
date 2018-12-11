@@ -12,7 +12,7 @@ steps:
   unit-tests:
     image: '${{build_kaggle_cli_image}}'
     commands:
-      - --version
+      - kaggle --version
 
   push_kaggle_cli_to_registry:
     type: push
