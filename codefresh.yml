@@ -1,5 +1,7 @@
 version: '1.0'
+
 steps:
+
   build_kaggle_cli_image:
     type: build
     title: Docker Image - Kaggle Client
@@ -12,7 +14,6 @@ steps:
     title: Pushing Kaggle Client Docker Image to DockerHub
     description: Pushing kaggle client Image to DockerHub
     candidate: '${{build_kaggle_cli_image}}'
-    dockerfile: docker-images/kaggle-cli/Dockerfile
     tag: '${{CF_BRANCH}}'
 
     #uncomment the registry and add your own registry if you want to use any registry other than dockerhub. See docs.codefresh.io for more information
