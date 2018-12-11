@@ -9,12 +9,17 @@ steps:
     image-name: azureq/kaggle-client
     dockerfile: docker-images/kaggle-cli/Dockerfile
 
+  unit-tests:
+    image: '${{build_kaggle_cli_image}}'
+    commands:
+      - --version
+
   push_kaggle_cli_to_registry:
     type: push
     title: Pushing Kaggle Client Docker Image to DockerHub
     description: Pushing kaggle client Image to DockerHub
     candidate: '${{build_kaggle_cli_image}}'
-    tag: '${{CF_BRANCH}}'
+    tag: "latest"
 
     #uncomment the registry and add your own registry if you want to use any registry other than dockerhub. See docs.codefresh.io for more information
     #registry:
@@ -22,3 +27,4 @@ steps:
       #make sure that you have a dockerUsername and dockerPassword define on the pipeline.
       username: '${{dockerUsername}}'
       password: '${{dockerPassword}}'
+
