@@ -12,6 +12,8 @@ steps:
   unit-tests:
     image: '${{build_kaggle_cli_image}}'
     commands:
+      - export KAGGLE_USERNAME='${{kagglerUsername}}'
+      - export KAGGLE_KEY='${{kaggleUserKey}}'
       - kaggle --version
 
   push_kaggle_cli_to_registry:
