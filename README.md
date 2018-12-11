@@ -1,1 +1,2 @@
 # DataPlatformOnKubernetes
+[![Codefresh build status]( https://g.codefresh.io/api/badges/pipeline/azureq/AzureQ%2FDataPlatformOnKubernetes%2FDataPlatformOnKubernetes?branch=master&key=eyJhbGciOiJIUzI1NiJ9.NWJlYWY3YmU3YzNkMjIyMDQ2MWFlMWZl.xLKwy5vAZe6OwNrVBt1-QK7rou0lKrLES7MZHBu9qH0&type=cf-2)]( https://g.codefresh.io/pipelines/DataPlatformOnKubernetes/builds?repoOwner=AzureQ&repoName=DataPlatformOnKubernetes&serviceName=AzureQ%2FDataPlatformOnKubernetes&filter=trigger:build~Build;branch:master;pipeline:5c1025a26da223637a6c3817~DataPlatformOnKubernetes)
