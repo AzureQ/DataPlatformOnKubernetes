@@ -1,32 +1,76 @@
 version: '1.0'
 
+stages:
+- build
+- unittest
+- push
+
 steps:
+  BuildDockerImages:
+    title: Building Docker Images
+    stage: 'build'
+    type: parallel
+    steps:
+      build_kaggle_cli_image:
+        type: build
+        title: Docker Image - Kaggle Client
+        description: Building kaggle client Image
+        image-name: azureq/kaggle-client
+        dockerfile: docker-images/kaggle-cli/Dockerfile
 
-  build_kaggle_cli_image:
-    type: build
-    title: Docker Image - Kaggle Client
-    description: Building kaggle client Image
-    image-name: azureq/kaggle-client
-    dockerfile: docker-images/kaggle-cli/Dockerfile
+      build_psql_cli_image:
+        type: build
+        title: Docker Image - Postgres Client
+        description: Building Postgres Client Image
+        image-name: azureq/postgres-client
+        dockerfile: docker-images/postgres-cli/Dockerfile
 
-  unit-tests:
-    image: '${{build_kaggle_cli_image}}'
-    commands:
-      - export KAGGLE_USERNAME='${{kagglerUsername}}'
-      - export KAGGLE_KEY='${{kaggleUserKey}}'
-      - kaggle --version
+  UnittestDockerImages:
+    title: Unit testing Docker Images
+    stage: 'unittest'
+    type: parallel
+    steps:
+      unit-tests-kaggle-cli:
+        image: '${{build_kaggle_cli_image}}'
+        commands:
+          - export KAGGLE_USERNAME='${{kagglerUsername}}'
+          - export KAGGLE_KEY='${{kaggleUserKey}}'
+          - kaggle --version
 
-  push_kaggle_cli_to_registry:
-    type: push
-    title: Pushing Kaggle Client Docker Image to DockerHub
-    description: Pushing kaggle client Image to DockerHub
-    candidate: '${{build_kaggle_cli_image}}'
-    tag: "latest"
+      unit-tests-postgres-cli:
+        image: '${{build_psql_cli_image}}'
+        commands:
+          - psql --version
 
-    #uncomment the registry and add your own registry if you want to use any registry other than dockerhub. See docs.codefresh.io for more information
-    #registry:
-    credentials:
-      #make sure that you have a dockerUsername and dockerPassword define on the pipeline.
-      username: '${{dockerUsername}}'
-      password: '${{dockerPassword}}'
+  PushToDockerhub:
+    title: Pushing Docker Images to DockerHub
+    stage: 'push'
+    type: parallel
+    steps:
+      push_kaggle_cli_to_registry:
+        type: push
+        title: Pushing Kaggle Client Docker Image to DockerHub
+        description: Pushing kaggle client Image to DockerHub
+        candidate: '${{build_kaggle_cli_image}}'
+        tag: "latest"
 
+        #uncomment the registry and add your own registry if you want to use any registry other than dockerhub. See docs.codefresh.io for more information
+        #registry:
+        credentials:
+          #make sure that you have a dockerUsername and dockerPassword define on the pipeline.
+          username: '${{dockerUsername}}'
+          password: '${{dockerPassword}}'
+
+      push_postgres_cli_to_registry:
+        type: push
+        title: Pushing Postgres Client Docker Image to DockerHub
+        description: Pushing Postgres Client Image to DockerHub
+        candidate: '${{build_psql_cli_image}}'
+        tag: "latest"
+
+        #uncomment the registry and add your own registry if you want to use any registry other than dockerhub. See docs.codefresh.io for more information
+        #registry:
+        credentials:
+          #make sure that you have a dockerUsername and dockerPassword define on the pipeline.
+          username: '${{dockerUsername}}'
+          password: '${{dockerPassword}}'
